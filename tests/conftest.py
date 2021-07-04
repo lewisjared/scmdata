@@ -159,6 +159,10 @@ TEST_RUN_DF = pd.DataFrame(
 TEST_RUN_TS = np.array([[1, 6.0, 6], [0.5, 3, 3]]).T
 
 
+class CustomScmRun(BaseScmRun):
+    required_cols = ["variable", "unit", "scenario", "model"]
+
+
 @pytest.fixture
 def test_data_path():
     return TEST_DATA
@@ -262,6 +266,20 @@ def base_scm_run():
         np.arange(6).reshape(3, 2),
         index=[2000, 2010, 2020],
         columns={"variable": ["vara", "varb"], "unit": "unspecified"},
+    )
+
+
+@pytest.fixture(scope="function")
+def custom_scm_run():
+    yield CustomScmRun(
+        np.arange(12).reshape(3, 4),
+        index=[2000, 2010, 2020],
+        columns={
+            "variable": ["variable_a", "variable_b", "variable_a", "variable_b"],
+            "unit": "unspecified",
+            "scenario": ["scenario_a", "scenario_a", "scenario_b", "scenario_b"],
+            "model": "model",
+        },
     )
 
 
